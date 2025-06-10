@@ -4,12 +4,14 @@ import heapq
 import requests
 import datetime
 import shade_utils
+import json
+import os
 
 app = Flask(__name__)
 
 OPENWEATHER_API_KEY = "9ad163a00f70fb040a97016d7d0bc042"
 
-walkability_map = np.loadtxt("walkability_map_80007800.txt", dtype=int)
+walkability_map = np.loadtxt("walkability_map.txt", dtype=int)
 height, width = walkability_map.shape
 
 def astar(start, goal, grid):
@@ -135,6 +137,10 @@ def weather():
     else:
         return jsonify({"error": "Failed to fetch weather data"}), 500
 
+@app.route('/pois.json')
+def serve_pois():
+    return jsonify(adjusted_pois)
+
 @app.route('/shade_png/<path:filename>')
 def serve_shade_png(filename):
     return send_from_directory('shade_png', filename)
@@ -147,5 +153,43 @@ def serve_shade_txt(filename):
 def serve_walkability():
     return jsonify(walkability_map.tolist())
 
+@app.route("/mobile.html")
+def mobile():
+    return render_template("mobile.html", width=width, height=height)
+
+# === Preprocess POIs ===
+POIS_PATH = os.path.join('static', 'pois.json')
+adjusted_pois = []
+
+if os.path.exists(POIS_PATH):
+    with open(POIS_PATH, 'r', encoding='utf-8') as f:
+        original_pois = json.load(f)
+
+    for poi in original_pois:
+        name = poi.get('name', 'Unknown')
+        coord = poi.get('coord', [0, 0])
+        y, x = coord[1], coord[0]
+
+        if 0 <= y < height and 0 <= x < width:
+            if walkability_map[y, x] != 1:
+                new_y, new_x = find_nearest_white((y, x), walkability_map)
+                print(f"[INFO] Adjusting POI '{name}': ({x},{y}) → ({new_x},{new_y})")
+                adjusted_coord = [new_x, new_y]
+            else:
+                adjusted_coord = [x, y]
+        else:
+            print(f"[WARNING] POI '{name}' out of bounds: ({x},{y}) — skipped")
+            continue
+
+        adjusted_pois.append({
+            'name': name,
+            'coord': adjusted_coord
+        })
+
+    print(f"[INFO] Loaded and adjusted {len(adjusted_pois)} POIs.")
+else:
+    print(f"[ERROR] POI file not found: {POIS_PATH}")
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)

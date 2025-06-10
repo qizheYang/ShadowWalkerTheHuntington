@@ -1,0 +1,45 @@
+/* === mobile.css === */
+
+/* Top bar spacing */
+#top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #085700;
+    color: white;
+    padding: 10px;
+}
+
+#top-bar input {
+    width: 40%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+}
+
+#hamburger {
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 12px;
+}
+
+/* Canvas touch styling */
+#mapCanvas {
+    position: absolute;
+    top: 50px; /* height of top-bar */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    touch-action: none;
+    background-color: #fff;
+    width: 100vw;
+    height: calc(100vh - 50px);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}

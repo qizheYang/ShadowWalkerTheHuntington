@@ -1,0 +1,520 @@
+[
+  {
+    "name": "Parking Lot",
+    "coord": [
+      5384,
+      2129
+    ]
+  },
+  {
+    "name": "Allen Avenue Gate",
+    "coord": [
+      4616,
+      777
+    ]
+  },
+  {
+    "name": "Chinese Garden",
+    "coord": [
+      2616,
+      3553
+    ]
+  },
+  {
+    "name": "Japanese Garden",
+    "coord": [
+      2976,
+      5585
+    ]
+  },
+  {
+    "name": "Huntington Art Gallery (European)",
+    "coord": [
+      4696,
+      5065
+    ]
+  },
+  {
+    "name": "Library Exhibition Hall and West Hall",
+    "coord": [
+      5160,
+      4441
+    ]
+  },
+  {
+    "name": "Mapel Orientation Gallery",
+    "coord": [
+      5608,
+      4209
+    ]
+  },
+  {
+    "name": "Desert Garden Conservatory",
+    "coord": [
+      6176,
+      4617
+    ]
+  },
+  {
+    "name": "Japanese House",
+    "coord": [
+      2952,
+      5609
+    ]
+  },
+  {
+    "name": "Ceremonial Tea House",
+    "coord": [
+      2592,
+      5859
+    ]
+  },
+  {
+    "name": "Scott Galleries of American Art",
+    "coord": [
+      4064,
+      4419
+    ]
+  },
+  {
+    "name": "Boone Gallery",
+    "coord": [
+      3248,
+      4339
+    ]
+  },
+  {
+    "name": "Flowery Brush Studio",
+    "coord": [
+      2600,
+      3417
+    ]
+  },
+  {
+    "name": "Studio for Lodging the Mind",
+    "coord": [
+      2592,
+      3249
+    ]
+  },
+  {
+    "name": "Rose Hills Fdn. Conservatory for Botanical Science",
+    "coord": [
+      3856,
+      3593
+    ]
+  },
+  {
+    "name": "Flora-Legium/Banta Hall",
+    "coord": [
+      4032,
+      3201
+    ]
+  },
+  {
+    "name": "Red Car coffee shop",
+    "coord": [
+      5515,
+      3249
+    ]
+  },
+  {
+    "name": "Huntington Store",
+    "coord": [
+      5739,
+      3257
+    ]
+  },
+  {
+    "name": "1919 Cafe",
+    "coord": [
+      5875,
+      4180
+    ]
+  },
+  {
+    "name": "Rose Garden Tea Room",
+    "coord": [
+      3859,
+      4937
+    ]
+  },
+  {
+    "name": "Freshwater Pavilion (tea, boba, light fare)",
+    "coord": [
+      2659,
+      4427
+    ]
+  },
+  {
+    "name": "Jade Court Cafe",
+    "coord": [
+      2699,
+      3187
+    ]
+  },
+  {
+    "name": "Admission & Membership",
+    "coord": [
+      5435,
+      3299
+    ]
+  },
+  {
+    "name": "Reception Window (wheelchairs)",
+    "coord": [
+      5619,
+      3209
+    ]
+  },
+  {
+    "name": "Rothenberg Hall",
+    "coord": [
+      6027,
+      3689
+    ]
+  },
+  {
+    "name": "Rose Hills Fdn. Garden Court",
+    "coord": [
+      5835,
+      3665
+    ]
+  },
+  {
+    "name": "Munger Research Center",
+    "coord": [
+      5299,
+      3785
+    ]
+  },
+  {
+    "name": "Haaga Hall",
+    "coord": [
+      5883,
+      3897
+    ]
+  },
+  {
+    "name": "Ahmanson Classroom",
+    "coord": [
+      4099,
+      3433
+    ]
+  },
+  {
+    "name": "Botanical Administration & Labs",
+    "coord": [
+      4107,
+      3081
+    ]
+  },
+  {
+    "name": "Children's Picnic Area",
+    "coord": [
+      5899,
+      3017
+    ]
+  },
+  {
+    "name": "Australian Garden",
+    "coord": [
+      4147,
+      6331
+    ]
+  },
+  {
+    "name": "Desert Garden",
+    "coord": [
+      6459,
+      5515
+    ]
+  },
+  {
+    "name": "Lili Ponds",
+    "coord": [
+      5459,
+      6035
+    ]
+  },
+  {
+    "name": "Subtropical Garden",
+    "coord": [
+      4339,
+      5731
+    ]
+  },
+  {
+    "name": "Rose Garden",
+    "coord": [
+      3947,
+      5243
+    ]
+  },
+  {
+    "name": "Jungle Garden",
+    "coord": [
+      5283,
+      5371
+    ]
+  },
+  {
+    "name": "Palm Garden",
+    "coord": [
+      5779,
+      4939
+    ]
+  },
+  {
+    "name": "Herb Garden",
+    "coord": [
+      3699,
+      5003
+    ]
+  },
+  {
+    "name": "Shakespeare Garden",
+    "coord": [
+      4171,
+      4780
+    ]
+  },
+  {
+    "name": "North Vista & Camellias",
+    "coord": [
+      4475,
+      4179
+    ]
+  },
+  {
+    "name": "Education and Visitor Center",
+    "coord": [
+      5675,
+      3915
+    ]
+  },
+  {
+    "name": "Celebration Lawn",
+    "coord": [
+      6027,
+      4435
+    ]
+  },
+  {
+    "name": "Bus Pickup/Drop-Off",
+    "coord": [
+      6051,
+      3196
+    ]
+  },
+  {
+    "name": "Passenger Pickup/Drop-Off Uber/Lyft/Taxi",
+    "coord": [
+      5259,
+      3188
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      2832,
+      3161
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      2464,
+      3609
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      2048,
+      4041
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      2680,
+      4487
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      2880,
+      5655
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      5576,
+      6407
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      3800,
+      4790
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      3192,
+      4238
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      3840,
+      4598
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      3960,
+      4582
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      3640,
+      3569
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      4040,
+      3441
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      3824,
+      3145
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      5450,
+      3377
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      6106,
+      3585
+    ]
+  },
+  {
+    "name": "Toilet",
+    "coord": [
+      5994,
+      4289
+    ]
+  },
+  {
+    "name": "Bike Parking Lot",
+    "coord": [
+      5562,
+      2915
+    ]
+  },
+  {
+    "name": "Drinking Fountain",
+    "coord": [
+      3992,
+      5046
+    ]
+  },
+  {
+    "name": "Drinking Fountain",
+    "coord": [
+      2983,
+      5644
+    ]
+  },
+  {
+    "name": "Drinking Fountain",
+    "coord": [
+      3435,
+      6166
+    ]
+  },
+  {
+    "name": "Drinking Fountain",
+    "coord": [
+      5572,
+      6387
+    ]
+  },
+  {
+    "name": "Drinking Fountain",
+    "coord": [
+      6066,
+      6314
+    ]
+  },
+  {
+    "name": "Drinking Fountain",
+    "coord": [
+      6060,
+      5399
+    ]
+  },
+  {
+    "name": "Drinking Fountain",
+    "coord": [
+      5629,
+      4357
+    ]
+  },
+  {
+    "name": "Drinking Fountain",
+    "coord": [
+      5488,
+      3394
+    ]
+  },
+  {
+    "name": "Drinking Fountain",
+    "coord": [
+      3779,
+      2562
+    ]
+  },
+  {
+    "name": "Drinking Fountain",
+    "coord": [
+      3498,
+      5425
+    ]
+  },
+  {
+    "name": "Wheelchair Pickup",
+    "coord": [
+      5653,
+      3309
+    ]
+  },
+  {
+    "name": "Children's Garden",
+    "coord": [
+      3783,
+      3276
+    ]
+  }
+]

@@ -22,22 +22,33 @@ def get_shade_hour_for_now():
 
     return shade_hour
 
-def get_combined_map(walkability_map):
-    height, width = walkability_map.shape
-
-    now = datetime.now()
-
-    shade_hour = get_shade_hour_for_now()
-
-    month_str = f"{now.month:02d}"
-    hour_str = f"{shade_hour:02d}"
-
-    shade_filename = f"upscaled/{month_str}{hour_str}.txt"
+def load_and_upscale_shade_map(month: int, hour: int, scale_factor: int = 10):
+    """
+    Load a low-res 800x780 shade map and upscale it to 8000x7800.
+    Returns upscaled NumPy array (int type).
+    """
+    filename = f"shade_txt/{month:02d}{hour:02d}.txt"
 
     try:
-        shade_map = np.loadtxt(shade_filename, dtype=int)
+        lowres = np.loadtxt(filename, dtype=int)
     except Exception as e:
-        print(f"[ERROR] Failed to load shade map {shade_filename}: {e}")
+        print(f"[ERROR] Could not load {filename}: {e}")
+        return None
+
+    # Nearest-neighbor upscale
+    upscaled = np.repeat(np.repeat(lowres, scale_factor, axis=0), scale_factor, axis=1)
+
+    print(f"[INFO] Loaded and upscaled {filename}: {lowres.shape} → {upscaled.shape}")
+    return upscaled
+
+def get_combined_map(walkability_map):
+    now = datetime.now()
+    shade_hour = get_shade_hour_for_now()
+
+    shade_map = load_and_upscale_shade_map(now.month, shade_hour)
+
+    if shade_map is None:
+        print("[WARNING] Shade map missing, using zero mask.")
         shade_map = np.zeros_like(walkability_map, dtype=int)
 
     print(f"[INFO] walkability_map shape: {walkability_map.shape}")
@@ -53,8 +64,7 @@ def get_combined_map(walkability_map):
     combined_map[(walkability_map == 1) & (shade_map == 1)] = 2
     combined_map[(walkability_map == 1) & (shade_map == 0)] = 1
 
-    print(f"[INFO] Using shade map: {shade_filename}")
-
+    print(f"[INFO] Using shade map for {now.month:02d}{shade_hour:02d}")
     return combined_map
 
 def astar_with_shade(start, goal, grid):
@@ -87,11 +97,11 @@ def astar_with_shade(start, goal, grid):
                 cell_value = grid[neighbor]
 
                 if cell_value == 2:
-                    step_cost = 10
+                    step_cost = 10  # shaded & walkable
                 elif cell_value == 1:
-                    step_cost = 15
+                    step_cost = 15  # sunny & walkable
                 else:
-                    step_cost = 10000
+                    step_cost = 10000  # unwalkable
 
                 if step_cost >= 10000:
                     continue

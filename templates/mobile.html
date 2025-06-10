@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shadow Walker - Mobile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/mobile.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Lato&display=swap" rel="stylesheet">
+  <style>
+    .switch-ios {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 32px;
+    }
+
+    .switch-ios input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider-ios {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 32px;
+    }
+
+    .slider-ios:before {
+      position: absolute;
+      content: "";
+      height: 24px;
+      width: 24px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    .switch-ios input:checked + .slider-ios {
+      background-color: #4cd964; /* iOS green */
+    }
+
+    .switch-ios input:checked + .slider-ios:before {
+      transform: translateX(20px);
+    }
+
+    .shade-description {
+      font-size: 14px;
+      margin-top: 6px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<!-- === SEARCH BAR === -->
+<div style="margin: 12px; display: flex; gap: 8px; justify-content: center;">
+  <div style="position: relative;">
+    <input type="text" id="start-search" placeholder="Start Point..." style="padding: 6px 12px; width: 140px;">
+    <div id="start-results" style="position: absolute; top: 100%; background: white; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; width: 140px; display: none; z-index: 999;"></div>
+  </div>
+
+  <div style="position: relative;">
+    <input type="text" id="end-search" placeholder="End Point..." style="padding: 6px 12px; width: 140px;">
+    <div id="end-results" style="position: absolute; top: 100%; background: white; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; width: 140px; display: none; z-index: 999;"></div>
+  </div>
+
+  <button id="find-path-btn" style="padding: 6px 12px; background-color: #085700; color: white; border-radius: 6px;">🔍</button>
+</div>
+
+<!-- === SIDE MENU === -->
+<div id="side-menu">
+  <div style="display: flex; justify-content: flex-end;">
+    <button onclick="toggleMenu()" style="font-size: 18px; background: none; color: #085700; border: none; cursor: pointer;">✕</button>
+  </div>
+
+  <h3>🗺️ Map Options</h3>
+
+  <label class="switch-ios">
+    <input type="checkbox" id="enable-shade-route">
+    <span class="slider-ios"></span>
+  </label>
+  <div class="shade-description">Enable cooler walking route by avoiding sunny paths</div>
+</div>
+
+<!-- === MAP CANVAS === -->
+<canvas id="mapCanvas" width="{{ width }}" height="{{ height }}"></canvas>
+
+<!-- === RECENTER BUTTON === -->
+<button id="recenter-button" onclick="recenterMap()" style="
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  background-color: white;
+  border: 2px solid #085700;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  color: #085700;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 1000;
+  display: none;
+">🎯</button>
+
+<!-- === BOTTOM SWITCH === -->
+<div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; text-align: center;">
+  <label class="switch-ios">
+    <input type="checkbox" id="shade-toggle">
+    <span class="slider-ios"></span>
+  </label>
+  <div class="shade-description">Enable Shade Route</div>
+</div>
+
+<!-- === SCRIPTS === -->
+<script src="https://unpkg.com/suncalc/suncalc.js"></script>
+<script src="/static/search.js"></script>
+<script src="/static/shade.js"></script>
+<script src="/static/mobile.js"></script>
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('side-menu');
+    menu.style.transform = (menu.style.transform === 'translateX(0%)') ? 'translateX(-100%)' : 'translateX(0%)';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Huntington Path Finder</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+
+    <!-- Include in HTML <head> -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Lato&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Redirect to mobile version if mobile -->
+<script>
+    if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        window.location.href = "/mobile.html";
+    }
+</script>
+
+<script>
+    function processCheat() {
+        const code = document.getElementById('cheat-input').value.trim();
+        if (code === 'assumeSun') {
+            alert('☀️ Cheat activated: Shade map + Shade route enabled!');
+
+            // Enable and check "Show Shade Map"
+            const shadeToggle = document.getElementById('shadeToggle');
+            shadeToggle.disabled = false;
+            shadeToggle.checked = true;
+            updateShadeLayer();
+
+            // Enable and check "Enable Shade Route"
+            const shadeRoute = document.getElementById('enable-shade-route');
+            shadeRoute.disabled = false;
+            shadeRoute.checked = true;
+
+        } else {
+            alert('❌ Invalid cheat code.');
+        }
+    }
+</script>
+
+<!-- Main title -->
+<h1>Huntington Path Finder</h1>
+
+<!--&lt;!&ndash; === SEARCH BOX === &ndash;&gt;-->
+<!--<div style="margin: 12px 0; position: relative;">-->
+<!--    <input type="text" id="poi-search" placeholder="Search Point of Interest..."-->
+<!--        style="padding: 6px 12px; width: 300px; font-size: 14px;">-->
+<!--    <div id="poi-results"-->
+<!--         style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ccc;-->
+<!--                max-height: 200px; overflow-y: auto; width: 100%; display: none; z-index: 999;">-->
+<!--    </div>-->
+<!--</div>-->
+
+<!-- === SEARCH BOX: Start + End SIDE BY SIDE + CENTERED === -->
+<div style="margin: 12px 0; display: flex; flex-direction: row; gap: 16px; align-items: flex-end; justify-content: center;">
+
+    <!-- START POINT -->
+    <div style="position: relative;">
+        <label style="font-weight: bold;">Start Point:</label><br>
+        <input type="text" id="start-search" placeholder="Current Location (default)..."
+            style="padding: 6px 12px; width: 300px; font-size: 14px;">
+        <button onclick="enableMapSelect('start')" style="margin-left: 6px; margin-top: 4px; padding: 6px 12px;">Click from Map</button>
+        <div id="start-results" style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; width: 300px; display: none; z-index: 999;"></div>
+    </div>
+
+    <!-- END POINT -->
+    <div style="position: relative;">
+        <label style="font-weight: bold;">End Point:</label><br>
+        <input type="text" id="end-search" placeholder="Search Destination..."
+            style="padding: 6px 12px; width: 300px; font-size: 14px;">
+        <button onclick="enableMapSelect('end')" style="margin-left: 6px; margin-top: 4px; padding: 6px 12px;">Click from Map</button>
+        <div id="end-results" style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; width: 300px; display: none; z-index: 999;"></div>
+    </div>
+
+    <!-- FIND PATH BUTTON -->
+    <div style="display: flex; flex-direction: column; justify-content: flex-end;">
+        <button id="find-path-btn"
+            style="padding: 8px 14px; font-size: 14px; background-color: #085700; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            ➤ Find Path
+        </button>
+    </div>
+
+</div>
+
+
+<!-- Main layout -->
+<div class="center-wrapper">
+
+    <!-- LEFT PANEL -->
+    <div class="side-panel" style="display: flex; flex-direction: column; justify-content: flex-start; gap: 20px;">
+
+        <!-- Sun Path -->
+        <div>
+            <h3>☀️ Sun Path</h3>
+            <canvas id="sunCanvas" width="200" height="200"></canvas>
+            <p id="sun-times">Loading...</p>
+        </div>
+
+        <!-- Controls -->
+        <div>
+            <h3>🕹️ Controls</h3>
+            <button onclick="resetMap()">Reset Map</button>
+
+            <div class="move-buttons">
+                <button class="move-btn" onmousedown="startMove(0, -50)" onmouseup="stopMove()" onmouseleave="stopMove()">⬆️</button>
+                <div class="move-row">
+                    <button class="move-btn" onmousedown="startMove(-50, 0)" onmouseup="stopMove()" onmouseleave="stopMove()">⬅️</button>
+                    <button class="move-btn" onclick="resetView()">C</button>
+                    <button class="move-btn" onmousedown="startMove(50, 0)" onmouseup="stopMove()" onmouseleave="stopMove()">➡️</button>
+                </div>
+                <button class="move-btn" onmousedown="startMove(0, 50)" onmouseup="stopMove()" onmouseleave="stopMove()">⬇️</button>
+            </div>
+
+            <div>
+                <button onclick="zoomIn()">Zoom In</button>
+                <button onclick="zoomOut()">Zoom Out</button>
+<!--                <button onclick="useCurrentLocation()">Use Current Location</button>-->
+            </div>
+
+            <div>
+                <button onclick="startLocationTracking()">Start Tracking</button>
+                <button onclick="stopLocationTracking()">Stop Tracking</button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- CENTER MAP -->
+    <div class="main-container">
+        <!-- Huntington SVG logo centered -->
+        <div class="huntington-map-logo" style="display: flex; justify-content: center; align-items: center; margin-top: 16px;">
+            <a href="https://huntington.org">
+                <!-- 逸一时，误一世！-->
+                <svg xmlns="http://www.w3.org/2000/svg" width="95" height="96" viewBox="0 0 95 96"
+                     fill=#114514 <!-- Aaaaaaaa -->
+                >
+                    <path d="M3.354 0c4.21 5.452 5.488 11.51 5.589 19.688v13.879c0 4.534-1.924 8.867-5.33 11.877a22 22 0 0 1-1.056.876q-.153.118-.305.23a20 20 0 0 1-1.336.925l-.046.03q-.442.27-.87.49.005.002.007.005L0 48.004q.428.22.87.49l.046.03a20.05 20.05 0 0 1 1.336.926c.101.077.203.15.305.23.354.277.709.568 1.055.875a15.84 15.84 0 0 1 5.33 11.878v13.879C8.843 84.49 7.566 90.548 3.355 96h25.841V62.432c0-4.532-1.924-8.865-5.33-11.878a23 23 0 0 0-1.037-.86c-.115-.09-.23-.173-.346-.26q-.344-.26-.688-.495c-.07-.049-.144-.108-.216-.156q-.01-.005-.019-.012a16 16 0 0 0-.392-.247l-.045-.028q-.34-.211-.671-.389-.096-.056-.192-.107.096-.052.192-.107.332-.179.67-.389l.046-.029q.195-.118.392-.247l.018-.011c.073-.048.146-.108.217-.157q.344-.235.688-.494c.116-.087.231-.17.346-.262q.523-.407 1.037-.858a15.85 15.85 0 0 0 5.33-11.877V0zM91.636 0c-4.211 5.452-5.488 11.51-5.589 19.688v13.879c0 4.534 1.924 8.867 5.33 11.877.347.309.702.6 1.055.876q.154.118.306.23a19 19 0 0 0 1.336.925l.046.03q.442.27.87.49l-.008.005.008.004q-.428.22-.87.49l-.046.03a19.71 19.71 0 0 0-1.336.926c-.101.077-.203.15-.306.23-.353.277-.708.568-1.055.875a15.84 15.84 0 0 0-5.33 11.878v13.879c.101 8.178 1.378 14.236 5.589 19.688H65.795V62.432c0-4.532 1.923-8.865 5.33-11.878.341-.302.689-.586 1.036-.86.116-.09.23-.173.347-.26q.344-.26.687-.495c.072-.049.145-.108.218-.156l.018-.012q.196-.127.392-.247l.045-.028q.34-.211.671-.389.096-.056.192-.107-.096-.052-.192-.107a13 13 0 0 1-.716-.418q-.196-.118-.392-.247-.01-.005-.018-.011c-.073-.048-.146-.108-.218-.157a18 18 0 0 1-.687-.494c-.116-.087-.231-.17-.347-.262a23 23 0 0 1-1.036-.858 15.85 15.85 0 0 1-5.33-11.877V0zM47.495 31.368C45.795 37.233 36.287 46.495 30.467 48c5.82 1.505 15.328 10.767 17.028 16.632 1.7-5.865 11.208-15.127 17.028-16.632-5.82-1.505-15.328-10.767-17.028-16.632"></path>
+                </svg>
+            </a>
+        </div>
+        <canvas id="mapCanvas" width="{{ width }}" height="{{ height }}"></canvas>
+
+        <!-- Inline SVG Compass -->
+        <svg id="compass" class="compass" viewBox="0 0 100 100" width="80" height="80">
+            <circle cx="50" cy="50" r="48" stroke="#333" stroke-width="2" fill="white" />
+            <path d="M50 10 L55 50 L50 90 L45 50 Z" fill="#f00" />
+            <circle cx="50" cy="50" r="3" fill="#333" />
+        </svg>
+
+        <!-- Bottom left "Enable Shade Route" -->
+        <div style="position: absolute; bottom: 10px; left: 10px;">
+            <label style="background: rgba(255,255,255,0.9); padding: 4px 8px; border-radius: 6px;">
+                <input type="checkbox" id="enable-shade-route" style="transform: scale(1.2); margin-right: 6px;">
+                Enable Shade Route
+            </label>
+        </div>
+
+        <!-- Bottom right Download button -->
+<!--        <div style="position: absolute; bottom: 10px; right: 10px;">-->
+<!--            <button onclick="downloadPath()">📥 Download Path</button>-->
+<!--        </div>-->
+
+
+    </div>
+
+    <!-- RIGHT PANEL: Weather + Custom Map -->
+    <div class="side-panel" id="weather-forecast">
+        <h3>🌦️ Hourly Forecast</h3>
+        <div id="hourly-forecast" style="max-height: 800px; overflow-y: auto; text-align: left;">
+            Loading...
+        </div>
+
+        <!-- Custom Map section -->
+        <h3>🗺️ Custom Map</h3>
+        <div class="custom-map-options">
+            <label>
+                <input type="checkbox" id="show-sun-on-map" onchange="drawClickMarkers()">
+                See Sun on Map
+            </label>
+            <label>
+                <input type="checkbox" id="shadeToggle" onchange="updateShadeLayer()">
+                Show Shade Map
+            </label>
+            <label>
+                <input type="checkbox" id="show-pois-on-map" checked onchange="drawClickMarkers()">
+                Show Points of Interest
+            </label>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- Cheat Code Easter Egg -->
+<div align="center" style="margin-top: 60px; margin-bottom: 40px;">
+    <div id="cheat-code" style="display: inline-block; background: rgba(255,255,255,0.95); padding: 10px 16px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-family: 'Lato', sans-serif; font-size: 14px;">
+        <input type="text" id="cheat-input" placeholder="Enter cheat code..." style="padding: 6px 10px; border-radius: 4px; border: 1px solid #ccc; width: 200px;">
+        <button onclick="processCheat()" style="margin-left: 8px; padding: 6px 12px; border-radius: 4px; background-color: #085700; color: white; border: none; cursor: pointer;">Go</button>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/suncalc/suncalc.js"></script>
+<script>
+    window.map_width = {{ width }};
+    window.map_height = {{ height }};
+</script>
+
+<!-- Your JS files -->
+<script src="/static/map.js"></script>
+<script src="/static/shade.js"></script>
+<script src="/static/addon.js"></script>
+<script src="/static/search.js"></script>
+
+</body>
+</html>
