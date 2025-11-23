@@ -2,6 +2,11 @@
 // let poiImgLoaded = false;
 
 // === DEG TO COMPASS ===
+/**
+ * Helper function to find the appropriate characters for degree of sun in sky
+ * @param deg degree of sun
+ * @returns the characters representing the degree
+ */
 function degToCompass(deg) {
     const arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
                  "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
