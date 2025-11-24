@@ -37,6 +37,11 @@ window.addEventListener('load', () => {
         });
     }
 
+    /**
+     * Main rendering function for mobile view
+     * Draws map centered on current position with touch-based zoom/pan
+     * Includes POI markers with emoji symbols and navigation path
+     */
     function drawClickMarkers() {
         resizeCanvas();
 
@@ -169,6 +174,13 @@ window.addEventListener('load', () => {
         }
     }, { passive: false });
 
+    /**
+     * Calculates the Euclidean distance between two touch points
+     * Used for pinch-to-zoom gesture detection
+     * @param {Touch} t1 - First touch point
+     * @param {Touch} t2 - Second touch point
+     * @returns {number} Distance in pixels between the two touch points
+     */
     function getTouchDistance(t1, t2) {
         const dx = t2.clientX - t1.clientX;
         const dy = t2.clientY - t1.clientY;
@@ -212,6 +224,10 @@ window.addEventListener('load', () => {
         { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
     );
 
+    /**
+     * Resizes the canvas to match its CSS dimensions
+     * Called before each draw to handle responsive layout changes
+     */
     function resizeCanvas() {
         const w = canvas.clientWidth;
         const h = canvas.clientHeight;
@@ -221,6 +237,10 @@ window.addEventListener('load', () => {
         }
     }
 
+    /**
+     * Recenters the map on the user's current location
+     * Re-enables auto-follow mode and hides the recenter button
+     */
     window.recenterMap = () => {
         if (window.currentLocationPoint) {
             centerX = window.currentLocationPoint.x;
@@ -231,6 +251,13 @@ window.addEventListener('load', () => {
         }
     };
 
+    /**
+     * Sends a pathfinding request to the server (mobile version)
+     * Automatically fits zoom to show the entire path
+     * @param {{x: number, y: number}} start - Starting point coordinates
+     * @param {{x: number, y: number}} end - Ending point coordinates
+     * @param {boolean} allowThroughObstacles - Whether to allow paths through non-walkable areas
+     */
     window.sendPathRequest = function(start, end, allowThroughObstacles) {
         fetch("/path", {
             method: "POST",
@@ -254,6 +281,11 @@ window.addEventListener('load', () => {
         });
     };
 
+    /**
+     * Adjusts zoom level and center position to fit the entire path in view
+     * Adds margin around the path and respects zoom limits (0.5x-5x)
+     * @param {Array<{x: number, y: number}>} path - Array of path coordinates
+     */
     function fitZoomToPath(path) {
         if (!path.length) return;
         let minX = Math.min(...path.map(p => p.x));

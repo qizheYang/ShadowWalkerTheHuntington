@@ -28,6 +28,13 @@ fetch('/pois.json')
     });
 });
 
+/**
+ * Handles search input for start/end location fields
+ * Filters POIs by query, sorts by distance, and shows results dropdown
+ * Special handling for toilet/drinking fountain keywords (returns closest match)
+ * @param {string} query - Search query (lowercase, trimmed)
+ * @param {string} type - Either 'start' or 'end' to identify which field
+ */
 function handleSearchInput(query, type) {
     const resultsDiv = document.getElementById(`${type}-results`);
     resultsDiv.style.display = 'block';
@@ -126,6 +133,12 @@ function handleSearchInput(query, type) {
 }
 
 // === Apply selected coordinates
+/**
+ * Applies the selected POI coordinates to the navigation state
+ * Updates clicks array and triggers map redraw
+ * @param {string} type - Either 'start' or 'end'
+ * @param {number[]} coord - [x, y] coordinates of the selected POI
+ */
 function applySearchSelection(type, coord) {
     if (type === 'start') {
         clicks[0] = { x: coord[0], y: coord[1] };
@@ -138,6 +151,13 @@ function applySearchSelection(type, coord) {
 }
 
 // === Utility: squared distance
+/**
+ * Calculates squared Euclidean distance between a point and coordinate array
+ * Uses squared distance to avoid expensive sqrt operation for comparisons
+ * @param {{x: number, y: number}} p1 - First point object
+ * @param {number[]} coord - [x, y] coordinate array
+ * @returns {number} Squared distance between the two points
+ */
 function distanceSq(p1, coord) {
     const dx = p1.x - coord[0];
     const dy = p1.y - coord[1];
@@ -175,6 +195,12 @@ document.getElementById('find-path-btn').addEventListener('click', () => {
 });
 
 // === Fallback lookup by name
+/**
+ * Finds POI coordinates by exact name match (case-insensitive)
+ * Used as fallback when coordinates weren't captured from dropdown selection
+ * @param {string} name - POI name to search for
+ * @returns {{x: number, y: number}|null} Coordinates object or null if not found
+ */
 function findCoord(name) {
     const match = poiData.find(p => p.name.toLowerCase() === name.toLowerCase());
     return match ? { x: match.coord[0], y: match.coord[1] } : null;

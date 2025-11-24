@@ -10,6 +10,12 @@ let shadeImgLoaded = false;
 shadeToggle.addEventListener("change", updateShadeLayer);
 
 // === UPDATE SHADE LAYER ===
+/**
+ * Updates the shade overlay based on current time
+ * Selects the appropriate shade PNG file based on month and 2-hour time interval
+ * File naming format: MMHH.png (e.g., "0512.png" for May at noon)
+ * Triggers map redraw after loading the shade image
+ */
 function updateShadeLayer() {
     const now = new Date();
     const hour = now.getHours();
@@ -50,11 +56,21 @@ function updateShadeLayer() {
 }
 
 // === SHADE ROUTE HELPER ===
+/**
+ * Checks if shade-optimized routing is enabled
+ * @returns {boolean} True if the "enable-shade-route" checkbox is checked
+ */
 function isShadeRouteEnabled() {
     return document.getElementById("enable-shade-route").checked;
 }
 
 // === WEATHER CHECK FOR COMPLETE SHADOW ===
+/**
+ * Checks weather conditions and disables shade features if fully overcast
+ * Shows alert and disables shade map/route toggles when not sunny
+ * Re-enables controls when sunny conditions return
+ * @param {string} currentWeather - Current weather description from API
+ */
 function checkForCompleteShadow(currentWeather) {
     const weather = currentWeather.toLowerCase();
 

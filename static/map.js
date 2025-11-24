@@ -51,6 +51,13 @@ const geoLocators = [
 ];
 
 // === GPS → MAP XY ===
+/**
+ * Converts GPS coordinates (longitude, latitude) to map grid coordinates
+ * Uses geo-locator reference points for linear interpolation
+ * @param {number} lon - Longitude coordinate
+ * @param {number} lat - Latitude coordinate
+ * @returns {{x: number, y: number}} Map grid coordinates
+ */
 function gpsToMap(lon, lat) {
     // Bounding box
     const minLon = Math.min(...geoLocators.map(p => p.gps[0]));
@@ -98,12 +105,25 @@ img.onload = () => {
 };
 
 // === UPDATE CANVAS SIZE ===
+/**
+ * Updates the canvas dimensions based on image size and display scale
+ * Called when the map image loads or display scale changes
+ */
 function updateCanvasSize() {
     canvas.width = img.width * displayScaleX;
     canvas.height = img.height * displayScaleY;
 }
 
 // === DRAW CLICK MARKERS ===
+/**
+ * Main rendering function that redraws the entire map canvas including:
+ * - Base map image with zoom/pan transforms
+ * - Shade overlay (if enabled)
+ * - POI markers with emoji symbols and labels
+ * - Navigation path (lime green line)
+ * - Start point (blue), end point (red), current point (green)
+ * - Sun overlay and current location indicator (blue dot)
+ */
 function drawClickMarkers() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -280,6 +300,13 @@ canvas.addEventListener("click", function(e) {
 });
 
 // === SNAP TO NEAREST WALKABLE ===
+/**
+ * Snaps a coordinate to the nearest walkable point on the map
+ * Searches in expanding radius up to 20 pixels from original point
+ * @param {number} x - X grid coordinate
+ * @param {number} y - Y grid coordinate
+ * @returns {{x: number, y: number}} Nearest walkable coordinate or original if none found
+ */
 function snapToNearestWalkable(x, y) {
     if (!walkabilityMap.length) return { x, y };
     if (walkabilityMap[y][x] === 1) return { x, y };
@@ -300,6 +327,13 @@ function snapToNearestWalkable(x, y) {
 }
 
 // === SEND PATH REQUEST ===
+/**
+ * Sends a pathfinding request to the server
+ * Automatically retries with obstacles allowed if initial path fails
+ * @param {{x: number, y: number}} start - Starting point coordinates
+ * @param {{x: number, y: number}} end - Ending point coordinates
+ * @param {boolean} allowThroughObstacles - Whether to allow paths through non-walkable areas
+ */
 function sendPathRequest(start, end, allowThroughObstacles) {
     console.log("[DEBUG] Sending path request:", start, "→", end, "allow:", allowThroughObstacles);
 
@@ -328,6 +362,10 @@ function sendPathRequest(start, end, allowThroughObstacles) {
 }
 
 // === DRAW PATH ===
+/**
+ * Draws the navigation path on the canvas as a lime green line
+ * @param {Array<{x: number, y: number}>} path - Array of path coordinates
+ */
 function drawPath(path) {
     ctx.strokeStyle = "lime";
     ctx.lineWidth = 2 / zoomScale;
@@ -340,11 +378,18 @@ function drawPath(path) {
 }
 
 // === ZOOM ===
+/**
+ * Zooms in on the map by a factor of 1.2x
+ */
 function zoomIn() {
     zoomScale *= 1.2;
     drawClickMarkers();
 }
 
+/**
+ * Zooms out on the map by a factor of 1.2x
+ * Prevents zooming out beyond 1.0x scale
+ */
 function zoomOut() {
     const newZoom = zoomScale / 1.2;
     if (newZoom >= 1.0) {
@@ -407,6 +452,9 @@ canvas.addEventListener("mouseleave", function(e) {
 });
 
 // === RESET VIEW ===
+/**
+ * Resets the map view to default zoom (1.2x) and centers the map in the canvas
+ */
 function resetView() {
     zoomScale = 1.2;
     const canvasWidth = canvas.width;
@@ -421,6 +469,10 @@ function resetView() {
 }
 
 // === RESET MAP ===
+/**
+ * Clears all navigation state including clicks, path, and current point
+ * Triggers a redraw to show the clean map
+ */
 function resetMap() {
     clicks = [];
     currentPath = [];
@@ -432,6 +484,12 @@ function resetMap() {
 let moveInterval = null;
 let moveStartTime = 0;
 
+/**
+ * Starts continuous map movement in the specified direction
+ * Speed accelerates over time for faster navigation
+ * @param {number} dx - Horizontal direction (-1, 0, or 1)
+ * @param {number} dy - Vertical direction (-1, 0, or 1)
+ */
 function startMove(dx, dy) {
     if (moveInterval) return;
     moveStartTime = Date.now();
@@ -444,6 +502,9 @@ function startMove(dx, dy) {
     }, 50);
 }
 
+/**
+ * Stops the continuous map movement initiated by startMove
+ */
 function stopMove() {
     if (moveInterval) {
         clearInterval(moveInterval);
@@ -452,6 +513,11 @@ function stopMove() {
 }
 
 // === MOVE MAP ===
+/**
+ * Moves the map by the specified pixel offset
+ * @param {number} dx - Horizontal offset in pixels
+ * @param {number} dy - Vertical offset in pixels
+ */
 function moveMap(dx, dy) {
     offsetX -= dx;
     offsetY -= dy;
@@ -460,6 +526,10 @@ function moveMap(dx, dy) {
     drawClickMarkers();
 }
 
+/**
+ * Clamps map offsets to prevent panning beyond map boundaries
+ * Ensures the map always fills the visible canvas area
+ */
 function clampOffsets() {
     const mapDisplayWidth = img.width * displayScaleX * zoomScale;
     const mapDisplayHeight = img.height * displayScaleY * zoomScale;
@@ -480,6 +550,11 @@ function clampOffsets() {
     if (offsetY < minOffsetY) offsetY = minOffsetY;
 }
 
+/**
+ * Starts continuous GPS location tracking using the Geolocation API
+ * Updates currentLocationPoint when position changes
+ * Converts GPS coordinates to map coordinates and triggers redraw
+ */
 function startLocationTracking() {
     if (!navigator.geolocation) {
         alert("Geolocation not supported.");
@@ -521,6 +596,9 @@ function startLocationTracking() {
     }
 }
 
+/**
+ * Stops GPS location tracking and clears the current location marker
+ */
 function stopLocationTracking() {
     if (locationWatchId !== null) {
         navigator.geolocation.clearWatch(locationWatchId);
@@ -531,6 +609,10 @@ function stopLocationTracking() {
     }
 }
 
+/**
+ * Gets current GPS location once and adds it as a navigation point
+ * Automatically triggers pathfinding if this is the second point
+ */
 function useCurrentLocation() {
     if (!navigator.geolocation) {
         console.log("[ERROR] Geolocation not supported");

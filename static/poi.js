@@ -30,12 +30,21 @@ img.onload = async () => {
     await loadAndDrawPOIs();
 };
 
+/**
+ * Clears and redraws the base map image with current zoom/pan transforms
+ */
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.setTransform(zoomScale, 0, 0, zoomScale, offsetX, offsetY);
     ctx.drawImage(img, 0, 0, displayWidth, displayHeight);
 }
 
+/**
+ * Loads POIs from the server and draws them on the map
+ * Draws red dots at each POI location with name labels
+ * Labels are drawn at fixed size regardless of zoom level
+ * @returns {Promise<void>}
+ */
 async function loadAndDrawPOIs() {
     draw();
 

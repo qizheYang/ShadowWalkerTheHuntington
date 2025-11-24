@@ -4,7 +4,7 @@
 // === DEG TO COMPASS ===
 /**
  * Helper function to find the appropriate characters for degree of sun in sky
- * @param deg degree of sun
+ * @param {number} deg degree of sun
  * @returns the characters representing the degree
  */
 function degToCompass(deg) {
@@ -14,6 +14,12 @@ function degToCompass(deg) {
 }
 
 // === FETCH WEATHER DATA ===
+/**
+ * Fetches hourly weather data from the server and displays it in the UI
+ * Filters data to show only remaining hours of the current day in LA timezone
+ * Also triggers complete shadow check based on current weather conditions
+ * @returns {Promise<void>}
+ */
 async function fetchWeatherData() {
     const response = await fetch("/weather");
     const data = await response.json();
@@ -80,6 +86,14 @@ async function fetchWeatherData() {
 }
 
 // === DRAW SUN PATH PANEL ===
+/**
+ * Draws a circular sun path diagram on the canvas showing:
+ * - Sunrise to sunset arc with hourly tick marks
+ * - Current sun position based on altitude and azimuth
+ * - Cardinal directions (N, S, E, W)
+ * - Sunrise, sunset, and solar noon times
+ * Uses SunCalc library for astronomical calculations
+ */
 function drawSunPathWithSunCalc() {
     const lat = (mapTopLeft.lat + mapBottomRight.lat) / 2;
     const lng = (mapTopLeft.lon + mapBottomRight.lon) / 2;
@@ -203,6 +217,14 @@ function drawSunPathWithSunCalc() {
 }
 
 // === DRAW SUN ON MAP ===
+/**
+ * Draws sun position overlay on the main map canvas including:
+ * - Full orbit circle and daylight arc
+ * - Current sun position indicator
+ * - Object height reference (green arrow)
+ * - Shadow length projection (blue arrow) opposite to sun direction
+ * Only draws if "show-sun-on-map" checkbox is enabled
+ */
 function drawSunOnMap() {
     const showSun = document.getElementById("show-sun-on-map").checked;
     if (!showSun) return;
