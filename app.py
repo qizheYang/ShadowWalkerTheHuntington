@@ -9,7 +9,7 @@ import os
 
 app = Flask(__name__)
 
-OPENWEATHER_API_KEY = "9ad163a00f70fb040a97016d7d0bc042"
+OPENWEATHER_API_KEY = "*****" # hidden. github complains on privacy
 
 walkability_map = np.loadtxt("walkability_map.txt", dtype=int)
 height, width = walkability_map.shape
